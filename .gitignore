@@ -1,0 +1,7 @@
+temp/
+__pycache__/
+*.mp4
+*.pt
+.env
+venv/
+.nltk_data/
