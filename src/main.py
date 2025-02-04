@@ -7,10 +7,11 @@ from utils.logger import configure_logger
 
 logger = configure_logger(__name__)
 
+
 def combine_results(audio_data, video_data):
     with open("config/settings.yaml") as f:
         config = yaml.safe_load(f)
-    
+
     return {
         "metadata": {
             "category": determine_category(audio_data, video_data),
@@ -18,12 +19,15 @@ def combine_results(audio_data, video_data):
             "sentiment": audio_data["sentiment"],
             "key_topics": extract_topics(audio_data["transcript"]),
             "content_flags": {
-                "violence": video_data["violence_percent"] > config["rating_rules"]["violence_threshold"],
-                "profanity": audio_data["profanity_count"] > config["rating_rules"]["profanity_threshold"]
+                "violence": video_data["violence_percent"]
+                > config["rating_rules"]["violence_threshold"],
+                "profanity": audio_data["profanity_count"]
+                > config["rating_rules"]["profanity_threshold"],
             },
-            "predicted_rating": determine_rating(video_data, audio_data, config)
+            "predicted_rating": determine_rating(video_data, audio_data, config),
         }
     }
+
 
 def determine_rating(video_data, audio_data, config):
     if video_data["violence_percent"] > config["rating_rules"]["violence_threshold"]:
@@ -32,12 +36,18 @@ def determine_rating(video_data, audio_data, config):
         return "TV-14"
     return "TV-PG"
 
+
 def extract_topics(transcript):
     from nltk.tokenize import word_tokenize
-    return list(set([word.lower() for word in word_tokenize(transcript) if len(word) > 4]))
+
+    return list(
+        set([word.lower() for word in word_tokenize(transcript) if len(word) > 4])
+    )
+
 
 def determine_category(audio_data, video_data):
     return "Educational" if video_data["violence_percent"] < 5 else "Entertainment"
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -54,6 +64,7 @@ def main():
         print(f"Analysis Complete:\n{combine_results(audio_data, video_data)}")
     except Exception as e:
         logger.error(f"Analysis failed: {str(e)}")
+
 
 if __name__ == "__main__":
     main()
