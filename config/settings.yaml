@@ -1,0 +1,7 @@
+models:
+  clip: "ViT-B/32"
+  yolo: "yolov8n.pt"
+
+rating_rules:
+  violence_threshold: 5  # Percentage of frames
+  profanity_threshold: 2 # Number of words
