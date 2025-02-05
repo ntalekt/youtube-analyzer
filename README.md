@@ -41,7 +41,7 @@ python -m venv venv
 
 ### 2. Install dependencies
 ```bash
-pip install -r requirements.txt
+pip3 install -r requirements.txt --no-cache-dir
 python -m nltk.downloader punkt punkt_tab wordnet
 ```
 
